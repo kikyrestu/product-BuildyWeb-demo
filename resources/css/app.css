@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply bg-slate-100 text-slate-800;
+	}
+}
+
+@layer components {
+	.bw-shell {
+		background-image:
+			radial-gradient(circle at 10% 10%, rgba(34, 211, 238, 0.22), transparent 30%),
+			radial-gradient(circle at 90% 15%, rgba(56, 189, 248, 0.2), transparent 28%),
+			linear-gradient(180deg, #f0f9ff 0%, #f8fafc 45%, #eef2ff 100%);
+	}
+
+	.bw-card {
+		@apply bg-white/95 backdrop-blur border border-slate-200/80 rounded-xl shadow-sm;
+	}
+
+	.bw-card-accent {
+		@apply border-l-4 border-l-sky-500;
+	}
+
+	.bw-card-title {
+		@apply text-sm font-medium text-slate-500;
+	}
+
+	.bw-card-value {
+		@apply mt-2 text-2xl font-semibold text-slate-900;
+	}
+
+	.bw-btn-primary {
+		@apply inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition;
+	}
+
+	.bw-btn-accent {
+		@apply inline-flex items-center justify-center rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500 transition;
+	}
+
+	.bw-input {
+		@apply w-full rounded-lg border-slate-300 focus:border-sky-500 focus:ring-sky-500;
+	}
+
+	.bw-table-wrap {
+		@apply bw-card overflow-x-auto;
+	}
+
+	.bw-badge {
+		@apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+	}
+
+	.bw-badge-status-antrean {
+		@apply bg-slate-100 text-slate-700;
+	}
+
+	.bw-badge-status-proses_cuci {
+		@apply bg-cyan-100 text-cyan-800;
+	}
+
+	.bw-badge-status-proses_setrika {
+		@apply bg-amber-100 text-amber-800;
+	}
+
+	.bw-badge-status-selesai {
+		@apply bg-emerald-100 text-emerald-800;
+	}
+
+	.bw-badge-status-diambil {
+		@apply bg-violet-100 text-violet-800;
+	}
+
+	.bw-badge-payment-unpaid {
+		@apply bg-rose-100 text-rose-700;
+	}
+
+	.bw-badge-payment-partial {
+		@apply bg-orange-100 text-orange-700;
+	}
+
+	.bw-badge-payment-paid {
+		@apply bg-emerald-100 text-emerald-700;
+	}
+}
