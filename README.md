@@ -52,4 +52,5 @@ Untuk penggunaan komersial di luar ketentuan lisensi (redistribusi, sublicensing
 
 - Panduan deploy: [VPS_DEPLOY_GUIDE.md](VPS_DEPLOY_GUIDE.md)
 - Contoh config Nginx: [nginx-si-laundry-demo.conf](nginx-si-laundry-demo.conf)
+- Checklist security demo: [SECURITY_DEMO_CHECKLIST.md](SECURITY_DEMO_CHECKLIST.md)
 - Paket upload siap pakai ada di root source-code-normal: `si-laundry-demo-vps.zip`
