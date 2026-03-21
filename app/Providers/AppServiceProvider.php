@@ -22,12 +22,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Before installation completes, avoid database-backed cache for limiter checks.
-        if (! is_file(storage_path('app/install.lock')) && config('cache.default') === 'database') {
-            config([
-                'cache.default' => 'file',
-                'cache.limiter' => 'file',
-            ]);
+        // Before installation completes, avoid database-backed stateful services.
+        if (! is_file(storage_path('app/install.lock'))) {
+            if (config('cache.default') === 'database') {
+                config([
+                    'cache.default' => 'file',
+                    'cache.limiter' => 'file',
+                ]);
+            }
+
+            if (config('session.driver') === 'database') {
+                config(['session.driver' => 'file']);
+            }
         }
 
         RateLimiter::for('install-test', function (Request $request): Limit {

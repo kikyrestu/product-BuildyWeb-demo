@@ -76,6 +76,8 @@ class InstallerController extends Controller
                 'DB_DATABASE' => $validated['db_database'],
                 'DB_USERNAME' => $validated['db_username'],
                 'DB_PASSWORD' => (string) ($validated['db_password'] ?? ''),
+                'SESSION_DRIVER' => 'file',
+                'CACHE_STORE' => 'file',
             ]);
 
             config([
