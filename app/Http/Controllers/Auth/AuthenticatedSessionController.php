@@ -28,11 +28,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $redirectTo = match (auth()->user()->role) {
-                'owner', 'admin' => route('dashboard'),
-                'kasir' => route('pos.index'),
-                default => route('dashboard'),
-            };
+        $user = auth()->user();
+
+        if ($user?->role === 'kasir') {
+            // Ignore intended URL so cashier is never redirected to owner/admin-only pages.
+            return redirect()->route('pos.index');
+        }
+
+        $redirectTo = match ($user?->role) {
+            'owner', 'admin' => route('dashboard'),
+            default => route('dashboard'),
+        };
 
         return redirect()->intended($redirectTo);
     }
