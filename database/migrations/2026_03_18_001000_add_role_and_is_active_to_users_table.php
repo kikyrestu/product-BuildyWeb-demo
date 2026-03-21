@@ -23,7 +23,7 @@ return new class extends Migration
         });
 
         DB::table('users')->whereNull('role')->update(['role' => 'owner']);
-        DB::table('users')->whereNull('is_active')->update(['is_active' => true]);
+        DB::table('users')->whereNull('is_active')->update(['is_active' => DB::raw('TRUE')]);
     }
 
     /**
