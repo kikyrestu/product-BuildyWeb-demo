@@ -19,6 +19,7 @@
             request()->routeIs('settings.wa-templates*') => 'WA Templates',
             request()->routeIs('settings.payment-options*') => 'Payment Settings',
             request()->routeIs('settings.users*') => 'User Management',
+            request()->routeIs('settings.installer.*') => 'Reset Installer',
             request()->routeIs('profile.*') => 'Profil Akun',
             default => null,
         };
@@ -32,9 +33,6 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Fallback utility styles for hosting environments with Vite asset issues -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -122,6 +120,12 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
                         </span>
                         <span>User Management</span>
+                    </a>
+                    <a href="{{ route('settings.installer.reset.form') }}" class="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('settings.installer.*') ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20' : 'text-slate-200 hover:bg-white/10 hover:text-white' }}">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg {{ request()->routeIs('settings.installer.*') ? 'bg-rose-400/30 text-rose-100' : 'bg-slate-700/70 text-slate-200 group-hover:bg-rose-400/30 group-hover:text-rose-100' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/><path d="M12 7v5l3 2"/></svg>
+                        </span>
+                        <span>Reset Installer</span>
                     </a>
                 @endif
                 <a href="{{ route('profile.edit') }}" class="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('profile.*') ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20' : 'text-slate-200 hover:bg-white/10 hover:text-white' }}">

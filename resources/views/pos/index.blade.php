@@ -19,7 +19,7 @@
 
             <div class="bw-card p-5">
                 <h3 class="font-semibold text-slate-900">Checkout Cepat</h3>
-                <form method="POST" action="{{ route('pos.checkout') }}" class="mt-4 rounded-xl border border-slate-300 bg-slate-50/80 p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+                <form method="POST" action="{{ route('pos.checkout') }}" class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
                     @csrf
                     <input type="text" name="customer_name" value="{{ old('customer_name') }}" class="bw-input" placeholder="Nama pelanggan" required>
                     <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" class="bw-input" placeholder="No. WA pelanggan" required>
@@ -46,11 +46,11 @@
                     </select>
                     <input type="text" name="voucher_code" value="{{ old('voucher_code') }}" class="bw-input" placeholder="Kode voucher (opsional)">
 
-                    <div class="md:col-span-2 xl:col-span-4 rounded-lg border border-slate-300 bg-white p-3">
+                    <div class="md:col-span-2 xl:col-span-4">
                         <label class="text-sm text-slate-700">Addons (opsional)</label>
                         <div class="mt-2 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2">
                             @foreach ($addons as $addon)
-                                <label class="flex items-center gap-2 text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white">
+                                <label class="flex items-center gap-2 text-sm border border-slate-200 rounded-lg px-3 py-2 bg-slate-50/60">
                                     <input type="checkbox" name="addon_ids[]" value="{{ $addon->id }}" @checked(in_array((string) $addon->id, collect(old('addon_ids', []))->map(fn($v) => (string) $v)->all(), true))>
                                     <span>{{ $addon->name }}</span>
                                 </label>
@@ -58,7 +58,7 @@
                         </div>
                     </div>
 
-                    <div class="xl:col-span-4 rounded-lg border border-slate-300 bg-white p-3">
+                    <div class="xl:col-span-4">
                         <p class="mb-2 text-xs text-slate-500">Pembayaran dipilih saat proses pengambilan di Tracking Board.</p>
                         <button class="bw-btn-primary">Checkout Sekarang</button>
                     </div>
