@@ -4,7 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @php
-        $brandName = \App\Models\LaundryProfile::query()->value('laundry_name') ?: config('app.name', 'SI Laundry');
+        $brandName = config('app.name', 'SI Laundry');
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('laundry_profiles')) {
+                $brandName = \App\Models\LaundryProfile::query()->value('laundry_name') ?: $brandName;
+            }
+        } catch (\Throwable) {
+            // Installer must stay accessible even when database schema is not ready yet.
+        }
     @endphp
     <title>Setup Awal | {{ $brandName }}</title>
     <meta name="description" content="Setup awal konfigurasi database untuk {{ $brandName }}.">
