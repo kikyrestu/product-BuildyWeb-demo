@@ -19,6 +19,19 @@
     <meta name="description" content="Setup awal konfigurasi database untuk {{ $brandName }}.">
     @if ($hasViteAssets)
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        boxShadow: {
+                            soft: '0 10px 30px rgba(15, 23, 42, 0.08)',
+                        },
+                    },
+                },
+            };
+        </script>
     @endif
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
