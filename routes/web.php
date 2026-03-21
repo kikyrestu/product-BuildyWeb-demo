@@ -4,11 +4,46 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstallerController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/install', fn () => redirect()->route('login'))->name('install.show');
 Route::post('/install', fn () => redirect()->route('login'))->name('install.process');
 Route::post('/install/test', fn () => redirect()->route('login'))->name('install.test');
+
+Route::get('/_ops/deploy', function (Request $request) {
+    $deployToken = (string) env('DEPLOY_TOKEN', '');
+
+    if ($deployToken === '') {
+        abort(404);
+    }
+
+    if (! hash_equals($deployToken, (string) $request->query('token'))) {
+        abort(403);
+    }
+
+    $clearExitCode = Artisan::call('optimize:clear');
+    $clearOutput = trim(Artisan::output());
+
+    $migrateExitCode = Artisan::call('migrate', ['--force' => true]);
+    $migrateOutput = trim(Artisan::output());
+
+    return response()->json([
+        'ok' => $clearExitCode === 0 && $migrateExitCode === 0,
+        'commands' => [
+            'optimize_clear' => [
+                'exit_code' => $clearExitCode,
+                'output' => $clearOutput,
+            ],
+            'migrate_force' => [
+                'exit_code' => $migrateExitCode,
+                'output' => $migrateOutput,
+            ],
+        ],
+        'next_step' => 'Set DEPLOY_TOKEN to empty after success to disable this endpoint.',
+    ]);
+})->name('ops.deploy');
 
 Route::middleware('installed')->group(function (): void {
     Route::get('/', function () {
