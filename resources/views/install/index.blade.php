@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @php
         $brandName = config('app.name', 'SI Laundry');
+        $hasViteAssets = file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'));
 
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('laundry_profiles')) {
@@ -16,7 +17,9 @@
     @endphp
     <title>Setup Awal | {{ $brandName }}</title>
     <meta name="description" content="Setup awal konfigurasi database untuk {{ $brandName }}.">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if ($hasViteAssets)
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
     <div class="mx-auto max-w-xl px-4 py-10">
