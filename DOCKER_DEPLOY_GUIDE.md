@@ -26,6 +26,7 @@ Isi minimal variabel berikut di `.env.docker`:
 - `APP_URL=https://domain-kamu.com`
 - `APP_KEY=base64:...`
 - `DB_URL=postgresql://...`
+- `APP_PORT=8080` (ganti misalnya `8081` jika port 8080 sudah dipakai)
 - `RUN_MIGRATIONS=true`
 
 Jika belum punya `APP_KEY`, generate dulu:
@@ -40,7 +41,7 @@ docker compose run --rm app php artisan key:generate --show
 docker compose up -d --build
 ```
 
-Aplikasi akan tersedia di `http://IP_VPS:8080`.
+Aplikasi akan tersedia di `http://IP_VPS:APP_PORT`.
 
 ## 5. Operasional dasar
 
