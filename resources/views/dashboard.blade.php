@@ -38,7 +38,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <section class="rounded-3xl bg-gradient-to-r from-sky-600 via-blue-600 to-blue-500 px-5 py-5 shadow-lg shadow-sky-500/20">
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <article class="rounded-2xl bg-white/95 p-4">
+                    <article class="rounded-2xl border border-slate-300 bg-white/95 p-4 shadow-sm">
                         <p class="text-xs font-semibold tracking-wide text-slate-500">PENDING ORDERS</p>
                         <div class="mt-3 flex items-center justify-between">
                             <p class="text-3xl font-bold text-slate-900">{{ $pendingOrders }}</p>
@@ -48,7 +48,7 @@
                         </div>
                     </article>
 
-                    <article class="rounded-2xl bg-white/95 p-4">
+                    <article class="rounded-2xl border border-slate-300 bg-white/95 p-4 shadow-sm">
                         <p class="text-xs font-semibold tracking-wide text-slate-500">PROCESSING ORDER</p>
                         <div class="mt-3 flex items-center justify-between">
                             <p class="text-3xl font-bold text-slate-900">{{ $processingOrders }}</p>
@@ -58,7 +58,7 @@
                         </div>
                     </article>
 
-                    <article class="rounded-2xl bg-white/95 p-4">
+                    <article class="rounded-2xl border border-slate-300 bg-white/95 p-4 shadow-sm">
                         <p class="text-xs font-semibold tracking-wide text-slate-500">READY TO DELIVER</p>
                         <div class="mt-3 flex items-center justify-between">
                             <p class="text-3xl font-bold text-slate-900">{{ $readyOrders }}</p>
@@ -68,7 +68,7 @@
                         </div>
                     </article>
 
-                    <article class="rounded-2xl bg-white/95 p-4">
+                    <article class="rounded-2xl border border-slate-300 bg-white/95 p-4 shadow-sm">
                         <p class="text-xs font-semibold tracking-wide text-slate-500">DELIVERED ORDERS</p>
                         <div class="mt-3 flex items-center justify-between">
                             <p class="text-3xl font-bold text-slate-900">{{ $deliveredOrders }}</p>
