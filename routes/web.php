@@ -6,11 +6,9 @@ use App\Http\Controllers\PanelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/install', [InstallerController::class, 'show'])->name('install.show');
-Route::post('/install', [InstallerController::class, 'install'])->name('install.process');
-Route::post('/install/test', [InstallerController::class, 'test'])
-    ->middleware('throttle:install-test')
-    ->name('install.test');
+Route::get('/install', fn () => redirect()->route('login'))->name('install.show');
+Route::post('/install', fn () => redirect()->route('login'))->name('install.process');
+Route::post('/install/test', fn () => redirect()->route('login'))->name('install.test');
 
 Route::middleware('installed')->group(function (): void {
     Route::get('/', function () {

@@ -10,12 +10,6 @@ class EnsureInstalled
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $installedLockPath = storage_path('app/install.lock');
-
-        if (! is_file($installedLockPath)) {
-            return redirect()->route('install.show');
-        }
-
         return $next($request);
     }
 }
