@@ -63,7 +63,7 @@ Route::middleware('installed')->group(function (): void {
         ->name('orders.invoice.download');
 
     Route::get('/dashboard', DashboardController::class)
-        ->middleware(['auth', 'verified', 'role:owner,admin'])
+        ->middleware(['auth', 'verified', 'role:owner,admin,kasir'])
         ->name('dashboard');
 
     Route::middleware(['auth', 'role:owner,admin,kasir'])->group(function (): void {

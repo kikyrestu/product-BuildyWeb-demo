@@ -44,8 +44,8 @@
                     $userRole = auth()->user()->role;
                     $canOwnerAdmin = in_array($userRole, ['owner', 'admin'], true);
                     $isOwner = $userRole === 'owner';
-                    $homeRoute = $canOwnerAdmin ? route('dashboard') : route('pos.index');
-                    $isDashboardMenuActive = $canOwnerAdmin ? request()->routeIs('dashboard') : request()->routeIs('pos.*');
+                    $homeRoute = route('dashboard');
+                    $isDashboardMenuActive = request()->routeIs('dashboard');
                 @endphp
                 <a href="{{ $homeRoute }}" class="flex items-center gap-3">
                     @if (! empty($brandLogoPath))
@@ -163,8 +163,8 @@
                     $userRole = auth()->user()->role;
                     $canOwnerAdmin = in_array($userRole, ['owner', 'admin'], true);
                     $isOwner = $userRole === 'owner';
-                    $homeRoute = $canOwnerAdmin ? route('dashboard') : route('pos.index');
-                    $isDashboardMenuActive = $canOwnerAdmin ? request()->routeIs('dashboard') : request()->routeIs('pos.*');
+                    $homeRoute = route('dashboard');
+                    $isDashboardMenuActive = request()->routeIs('dashboard');
                 @endphp
                 <a href="{{ $homeRoute }}" class="block px-3 py-2 rounded-lg {{ $isDashboardMenuActive ? 'bg-slate-700 text-white' : 'text-slate-200' }}">Dashboard</a>
                 <a href="{{ route('pos.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('pos.*') ? 'bg-slate-700 text-white' : 'text-slate-200' }}">POS Kasir</a>

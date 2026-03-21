@@ -30,13 +30,8 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        if ($user?->role === 'kasir') {
-            // Ignore intended URL so cashier is never redirected to owner/admin-only pages.
-            return redirect()->route('pos.index');
-        }
-
         $redirectTo = match ($user?->role) {
-            'owner', 'admin' => route('dashboard'),
+            'owner', 'admin', 'kasir' => route('dashboard'),
             default => route('dashboard'),
         };
 
