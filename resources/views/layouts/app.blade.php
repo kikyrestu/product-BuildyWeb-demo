@@ -40,7 +40,14 @@
     <div class="min-h-screen flex">
         <aside class="hidden md:flex md:w-72 md:flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-slate-100">
             <div class="px-6 py-6 border-b border-slate-700/70">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                @php
+                    $userRole = auth()->user()->role;
+                    $canOwnerAdmin = in_array($userRole, ['owner', 'admin'], true);
+                    $isOwner = $userRole === 'owner';
+                    $homeRoute = $canOwnerAdmin ? route('dashboard') : route('pos.index');
+                    $isDashboardMenuActive = $canOwnerAdmin ? request()->routeIs('dashboard') : request()->routeIs('pos.*');
+                @endphp
+                <a href="{{ $homeRoute }}" class="flex items-center gap-3">
                     @if (! empty($brandLogoPath))
                         <img src="{{ route('media.public', ['path' => $brandLogoPath]) }}" alt="Logo {{ $brandName }}" class="h-10 w-10 rounded-xl border border-white/20 bg-white object-cover shadow-lg shadow-cyan-500/20">
                     @else
@@ -58,13 +65,8 @@
             </div>
 
             <nav class="flex-1 px-4 py-5 space-y-2 text-sm">
-                @php
-                    $userRole = auth()->user()->role;
-                    $canOwnerAdmin = in_array($userRole, ['owner', 'admin'], true);
-                    $isOwner = $userRole === 'owner';
-                @endphp
-                <a href="{{ route('dashboard') }}" class="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20' : 'text-slate-200 hover:bg-white/10 hover:text-white' }}">
-                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg {{ request()->routeIs('dashboard') ? 'bg-cyan-400/30 text-cyan-100' : 'bg-slate-700/70 text-slate-200 group-hover:bg-cyan-400/30 group-hover:text-cyan-100' }}">
+                <a href="{{ $homeRoute }}" class="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ $isDashboardMenuActive ? 'bg-white/15 text-white shadow-inner ring-1 ring-white/20' : 'text-slate-200 hover:bg-white/10 hover:text-white' }}">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg {{ $isDashboardMenuActive ? 'bg-cyan-400/30 text-cyan-100' : 'bg-slate-700/70 text-slate-200 group-hover:bg-cyan-400/30 group-hover:text-cyan-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zm10-10h8V3h-8v8z"/></svg>
                     </span>
                     <span>Dashboard</span>
@@ -161,8 +163,10 @@
                     $userRole = auth()->user()->role;
                     $canOwnerAdmin = in_array($userRole, ['owner', 'admin'], true);
                     $isOwner = $userRole === 'owner';
+                    $homeRoute = $canOwnerAdmin ? route('dashboard') : route('pos.index');
+                    $isDashboardMenuActive = $canOwnerAdmin ? request()->routeIs('dashboard') : request()->routeIs('pos.*');
                 @endphp
-                <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-slate-700 text-white' : 'text-slate-200' }}">Dashboard</a>
+                <a href="{{ $homeRoute }}" class="block px-3 py-2 rounded-lg {{ $isDashboardMenuActive ? 'bg-slate-700 text-white' : 'text-slate-200' }}">Dashboard</a>
                 <a href="{{ route('pos.index') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('pos.*') ? 'bg-slate-700 text-white' : 'text-slate-200' }}">POS Kasir</a>
                 <a href="{{ route('orders.tracking') }}" class="block px-3 py-2 rounded-lg {{ request()->routeIs('orders.tracking') ? 'bg-slate-700 text-white' : 'text-slate-200' }}">Tracking Board</a>
                 @if ($canOwnerAdmin)
