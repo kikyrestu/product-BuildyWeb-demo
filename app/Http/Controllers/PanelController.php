@@ -24,7 +24,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules\File;
@@ -121,11 +120,12 @@ class PanelController extends Controller
         }
 
         $actorId = (int) auth()->id();
+        $receiptNumber = $this->generateReceiptNumber();
 
         try {
-            $transaction = DB::transaction(function () use ($customer, $calculated, $voucher, $discountAmount, $validated, $actorId) {
+            $transaction = DB::transaction(function () use ($customer, $calculated, $voucher, $discountAmount, $validated, $actorId, $receiptNumber) {
                 $transactionPayload = [
-                'receipt_number' => $this->generateReceiptNumber(),
+                'receipt_number' => $receiptNumber,
                 'customer_id' => $customer->id,
                 'cashier_id' => $actorId,
                 'voucher_id' => $voucher?->id,
@@ -135,10 +135,6 @@ class PanelController extends Controller
                 'discount_amount' => $discountAmount,
                 'final_amount' => max(0, $calculated['total_amount'] - $discountAmount),
                 ];
-
-                if (Schema::hasColumn('transactions', 'payment_option_id')) {
-                    $transactionPayload['payment_option_id'] = null;
-                }
 
                 $created = Transaction::query()->create($transactionPayload);
 
