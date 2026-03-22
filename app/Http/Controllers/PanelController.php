@@ -22,6 +22,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules\File;
@@ -119,38 +122,53 @@ class PanelController extends Controller
 
         $actorId = (int) auth()->id();
 
-        $transaction = DB::transaction(function () use ($customer, $calculated, $voucher, $discountAmount, $validated, $actorId) {
-            $created = Transaction::query()->create([
+        try {
+            $transaction = DB::transaction(function () use ($customer, $calculated, $voucher, $discountAmount, $validated, $actorId) {
+                $transactionPayload = [
                 'receipt_number' => $this->generateReceiptNumber(),
                 'customer_id' => $customer->id,
                 'cashier_id' => $actorId,
                 'voucher_id' => $voucher?->id,
-                'payment_option_id' => null,
                 'status' => 'antrean',
                 'payment_status' => 'unpaid',
                 'total_amount' => $calculated['total_amount'],
                 'discount_amount' => $discountAmount,
                 'final_amount' => max(0, $calculated['total_amount'] - $discountAmount),
-            ]);
+                ];
 
-            foreach ($calculated['lines'] as $line) {
-                TransactionDetail::query()->create([
+                if (Schema::hasColumn('transactions', 'payment_option_id')) {
+                    $transactionPayload['payment_option_id'] = null;
+                }
+
+                $created = Transaction::query()->create($transactionPayload);
+
+                foreach ($calculated['lines'] as $line) {
+                    TransactionDetail::query()->create([
+                        'transaction_id' => $created->id,
+                        'master_service_id' => $line['service_id'],
+                        'qty' => $line['qty'],
+                        'snapshot_data' => $line['snapshot_data'],
+                    ]);
+                }
+
+                TransactionLog::query()->create([
                     'transaction_id' => $created->id,
-                    'master_service_id' => $line['service_id'],
-                    'qty' => $line['qty'],
-                    'snapshot_data' => $line['snapshot_data'],
+                    'user_id' => $actorId,
+                    'action_type' => 'created_order',
+                    'description' => 'Order created via web POS checkout.',
                 ]);
-            }
 
-            TransactionLog::query()->create([
-                'transaction_id' => $created->id,
-                'user_id' => $actorId,
-                'action_type' => 'created_order',
-                'description' => 'Order created via web POS checkout.',
+                return $created;
+            });
+        } catch (QueryException $exception) {
+            Log::error('POS checkout failed due to database query exception.', [
+                'message' => $exception->getMessage(),
             ]);
 
-            return $created;
-        });
+            return back()->withErrors([
+                'service_id' => 'Checkout gagal karena struktur database belum sinkron. Jalankan migration terbaru di server.',
+            ])->withInput();
+        }
 
         return redirect()
             ->route('orders.tracking')
