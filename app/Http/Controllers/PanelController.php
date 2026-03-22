@@ -122,9 +122,10 @@ class PanelController extends Controller
         $actorId = (int) auth()->id();
         $receiptNumber = $this->generateReceiptNumber();
 
+        $transaction = null;
+
         try {
-            $transaction = DB::transaction(function () use ($customer, $calculated, $voucher, $discountAmount, $validated, $actorId, $receiptNumber) {
-                $transactionPayload = [
+            $transaction = Transaction::query()->create([
                 'receipt_number' => $receiptNumber,
                 'customer_id' => $customer->id,
                 'cashier_id' => $actorId,
@@ -134,29 +135,30 @@ class PanelController extends Controller
                 'total_amount' => $calculated['total_amount'],
                 'discount_amount' => $discountAmount,
                 'final_amount' => max(0, $calculated['total_amount'] - $discountAmount),
-                ];
+            ]);
 
-                $created = Transaction::query()->create($transactionPayload);
-
-                foreach ($calculated['lines'] as $line) {
-                    TransactionDetail::query()->create([
-                        'transaction_id' => $created->id,
-                        'master_service_id' => $line['service_id'],
-                        'qty' => $line['qty'],
-                        'snapshot_data' => $line['snapshot_data'],
-                    ]);
-                }
-
-                TransactionLog::query()->create([
-                    'transaction_id' => $created->id,
-                    'user_id' => $actorId,
-                    'action_type' => 'created_order',
-                    'description' => 'Order created via web POS checkout.',
+            foreach ($calculated['lines'] as $line) {
+                TransactionDetail::query()->create([
+                    'transaction_id' => $transaction->id,
+                    'master_service_id' => $line['service_id'],
+                    'qty' => $line['qty'],
+                    'snapshot_data' => $line['snapshot_data'],
                 ]);
+            }
 
-                return $created;
-            });
+            TransactionLog::query()->create([
+                'transaction_id' => $transaction->id,
+                'user_id' => $actorId,
+                'action_type' => 'created_order',
+                'description' => 'Order created via web POS checkout.',
+            ]);
         } catch (QueryException $exception) {
+            if ($transaction) {
+                TransactionDetail::query()->where('transaction_id', $transaction->id)->delete();
+                TransactionLog::query()->where('transaction_id', $transaction->id)->delete();
+                $transaction->delete();
+            }
+
             Log::error('POS checkout failed due to database query exception.', [
                 'message' => $exception->getMessage(),
             ]);
